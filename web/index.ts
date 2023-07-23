@@ -45,6 +45,7 @@ const server = http.createServer((req, res) => {
     bb.on('close', () => {
       try {
         // No real code injection here, we control the filename
+        // TODO: Add file size limit
         execSync(`./caj2pdf convert ${saveTo} -o ${convertTo}`, { cwd: '../caj2pdf' });
         error = false;
       }
