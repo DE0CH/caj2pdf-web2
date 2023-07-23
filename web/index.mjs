@@ -57,7 +57,6 @@ const server = http.createServer((req, res) => {
             }
             else {
                 const stat = fs.statSync(convertTo);
-                console.log(filename);
                 res.writeHead(200, {
                     'Content-Type': 'application/pdf',
                     'Content-Disposition': `attachment; filename*=UTF-8''${encodeURI(decodeEntities(filename))}.pdf`,
@@ -66,8 +65,8 @@ const server = http.createServer((req, res) => {
                 const readStream = fs.createReadStream(convertTo);
                 readStream.pipe(res);
                 res.on('close', () => {
-                    // fs.unlink(saveTo, () => {});
-                    // fs.unlink(convertTo, () => {});
+                    fs.unlink(saveTo, () => { });
+                    fs.unlink(convertTo, () => { });
                 });
             }
         });

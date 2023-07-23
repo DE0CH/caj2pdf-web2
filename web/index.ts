@@ -64,8 +64,8 @@ const server = http.createServer((req, res) => {
         const readStream = fs.createReadStream(convertTo);
         readStream.pipe(res);
         res.on('close', () => {
-          // fs.unlink(saveTo, () => {});
-          // fs.unlink(convertTo, () => {});
+          fs.unlink(saveTo, () => {});
+          fs.unlink(convertTo, () => {});
         });
       }
     });
