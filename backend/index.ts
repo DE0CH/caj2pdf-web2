@@ -24,21 +24,15 @@ function decodeEntities(encodedString: string) {
 const server = http.createServer((req, res) => {
   if (req.url === '/') {
     res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end(`
-      <form action="/upload" enctype="multipart/form-data" method="post">
-        <input type="file" name="someCoolFiles"><br>
-        <button>Upload</button>
-      </form>
-    `);
+    res.end(fs.readFileSync('index.html'));
   } else if (req.url === '/upload') {
     let filename = '';
-    const bb = busboy({ headers: req.headers });
+    const bb = busboy({ headers: req.headers}); // 512MB file size limit
     const saveTo = tempfile();
     const convertTo = tempfile();
     let error = true;
-    // TODO: add file size limit
     // TODO: use pipe instead of saving to disk
-    // TODO: log access
+    console.log(`Request from ${req.socket.remoteAddress}`);
     bb.on('file', (name, file, info) => {
       try {
         filename = info.filename;
@@ -62,7 +56,6 @@ const server = http.createServer((req, res) => {
         res.end('500 Internal Server Error');
       } else {
         const stat = fs.statSync(convertTo);
-        console.log(filename);
         res.writeHead(200, {
           'Content-Type': 'application/pdf',
           'Content-Disposition': `attachment; filename*=UTF-8''${encodeURI(decodeEntities(filename))}.pdf`,
@@ -71,8 +64,8 @@ const server = http.createServer((req, res) => {
         const readStream = fs.createReadStream(convertTo);
         readStream.pipe(res);
         res.on('close', () => {
-          fs.unlink(saveTo, () => {});
-          fs.unlink(convertTo, () => {});
+          // fs.unlink(saveTo, () => {});
+          // fs.unlink(convertTo, () => {});
         });
       }
     });
