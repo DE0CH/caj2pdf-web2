@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@types/busboy": "^1.5.0",
+    "@types/node": "^20.4.4",
+    "busboy": "^1.6.0",
+    "typescript": "^5.1.6"
+  }
+}
