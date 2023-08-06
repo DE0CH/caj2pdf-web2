@@ -36,6 +36,7 @@ const server = http.createServer((req, res) => {
     bb.on('file', (name, file, info) => {
       try {
         filename = info.filename;
+        filename = Buffer.from(filename, 'latin1').toString('utf8');
         const stream = fs.createWriteStream(saveTo)
         file.pipe(stream);
       } catch (e) {
