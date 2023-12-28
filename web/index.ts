@@ -56,6 +56,8 @@ const server = http.createServer((req, res) => {
       if (error) {
         res.writeHead(500, { 'Content-Type': 'text/plain' });
         res.end('500 Internal Server Error');
+        fs.unlink(saveTo, () => {});
+        fs.unlink(convertTo, () => {});
       } else {
         const stat = fs.statSync(convertTo);
         res.writeHead(200, {
